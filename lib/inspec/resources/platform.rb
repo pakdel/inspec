@@ -27,7 +27,7 @@ module Inspec::Resources
     end
 
     def arch
-      @platform.arch
+      @platform.arch if @platform.respond_to?(:arch)
     end
 
     def families
@@ -57,15 +57,13 @@ module Inspec::Resources
 
     def params
       h = {
-        name: name,
+        name:     name,
         families: families,
-        release: release,
+        release:  release,
+        arch:     arch,
       }
 
-      # Avoid adding Arch for APIs (not applicable)
-      unless in_family?("api")
-        h[:arch] = arch
-      end
+      h.delete :arch if in_family?("api") # not applicable if api
 
       h
     end
