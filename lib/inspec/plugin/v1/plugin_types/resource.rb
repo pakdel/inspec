@@ -9,16 +9,18 @@ module Inspec
     # Overwrite inspect to provide better output to RSpec results.
     #
     # @return [String] full name of the resource
-    def inspect
+    def inspect # TODO: remove this... horrible debugging experience
       to_s
     end
   end
 
+  # NOTE: This is only ever `extend`ed, so these are all class methods.
   module ResourceDSL
     def name(name = nil)
       return @name if name.nil?
 
       @name = name
+
       __register(name, self)
     end
 
@@ -33,6 +35,7 @@ module Inspec
 
       key = @name.to_sym
 
+      # HACK: this is broken!!! this is global where the rest are localized to registry
       Inspec::Resource.supports[key] ||= []
       Inspec::Resource.supports[key].push(criteria)
     end
@@ -154,7 +157,7 @@ module Inspec
         def inspec
           @__backend_runner__
         end
-      end
+      end # Class.new
 
       # rubocop:enable Lint/NestedMethodDefinition
 
