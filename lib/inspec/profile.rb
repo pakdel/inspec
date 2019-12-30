@@ -312,6 +312,7 @@ module Inspec
       end
 
       # add information about the required inputs
+      res[:inputs] = params[:inputs].dup
       if res[:inputs].nil? || res[:inputs].empty?
         # convert to array for backwards compatability
         res[:inputs] = []
